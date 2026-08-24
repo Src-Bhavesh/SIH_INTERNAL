@@ -419,6 +419,7 @@ body{
   border:1px solid rgba(255,255,255,0.12);border-radius:16px;
   padding:26px;max-width:480px;width:90%;
   box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  color: rgba(255, 255, 255, 0.92);
 }
 .quiz-content h2{font-family:'Outfit',sans-serif;margin-bottom:12px;font-size:18px}
 .quiz-options{display:flex;flex-direction:column;gap:8px;margin:16px 0}
@@ -426,6 +427,7 @@ body{
   background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
   padding:11px 14px;border-radius:10px;cursor:pointer;text-align:left;
   font-size:13px;transition:all 0.15s;font-family:'Space Grotesk',sans-serif;
+  color: rgba(255, 255, 255, 0.85);
 }
 .quiz-opt:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15)}
 .quiz-opt.correct{background:rgba(90,224,160,0.12);border-color:rgba(90,224,160,0.4)}
