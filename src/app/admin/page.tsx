@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import ScoreRing from '@/components/shared/ScoreRing';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -350,6 +350,14 @@ function AdminDashboardContent() {
 }
 
 export default function AdminDashboardPage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <DashboardLayout requiredRole="admin">
       <AdminDashboardContent />

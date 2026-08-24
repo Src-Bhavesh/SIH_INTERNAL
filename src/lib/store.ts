@@ -31,6 +31,12 @@ import {
   recordSimulationAttemptInDb,
   fetchAllSimulationAttemptsFromDb,
   updateDrillParticipantInDb,
+  fetchScenariosFromDb,
+  upsertScenarioToDb,
+  deleteScenarioFromDb,
+  fetchDistrictSchoolsFromDb,
+  upsertDistrictSchoolToDb,
+  deleteDistrictSchoolFromDb,
 } from './supabase';
 import { getPreparednessLevel } from './utils';
 
@@ -193,64 +199,79 @@ export const useDrillStore = create<DrillState>()((set, get) => ({
 // ── District Schools Store ──
 interface DistrictStore {
   schools: DistrictSchoolSummary[];
-  addSchool: (school: DistrictSchoolSummary) => void;
-  deleteSchool: (schoolId: string) => void;
-  resetSchools: () => void;
+  isInitialized: boolean;
+  initSchools: () => Promise<void>;
+  addSchool: (school: DistrictSchoolSummary) => Promise<void>;
+  deleteSchool: (schoolId: string) => Promise<void>;
+  resetSchools: () => Promise<void>;
 }
 
-export const useDistrictStore = create<DistrictStore>()(
-  persist(
-    (set) => ({
-      schools: initialDistrictSchools,
-      addSchool: (newSchool) =>
-        set((state) => ({
-          schools: [newSchool, ...state.schools],
-        })),
-      deleteSchool: (schoolId) =>
-        set((state) => ({
-          schools: state.schools.filter((s) => s.schoolId !== schoolId),
-        })),
-      resetSchools: () =>
-        set({
-          schools: initialDistrictSchools,
-        }),
-    }),
-    {
-      name: 'suraksha-district-storage',
+export const useDistrictStore = create<DistrictStore>()((set, get) => ({
+  schools: initialDistrictSchools,
+  isInitialized: false,
+  initSchools: async () => {
+    if (get().isInitialized) return;
+    const fromDb = await fetchDistrictSchoolsFromDb();
+    if (fromDb.length > 0) {
+      set({ schools: fromDb, isInitialized: true });
+    } else {
+      // populate default if none
+      for (const s of initialDistrictSchools) await upsertDistrictSchoolToDb(s);
+      set({ schools: initialDistrictSchools, isInitialized: true });
     }
-  )
-);
+  },
+  addSchool: async (newSchool) => {
+    await upsertDistrictSchoolToDb(newSchool);
+    set((state) => ({ schools: [newSchool, ...state.schools] }));
+  },
+  deleteSchool: async (schoolId) => {
+    await deleteDistrictSchoolFromDb(schoolId);
+    set((state) => ({ schools: state.schools.filter((s) => s.schoolId !== schoolId) }));
+  },
+  resetSchools: async () => {
+    for (const s of get().schools) await deleteDistrictSchoolFromDb(s.schoolId);
+    for (const s of initialDistrictSchools) await upsertDistrictSchoolToDb(s);
+    set({ schools: initialDistrictSchools });
+  },
+}));
 
 // ── Scenarios Store ──
 interface ScenarioStore {
   scenarios: Scenario[];
-  addScenario: (scenario: Scenario) => void;
-  deleteScenario: (scenarioId: string) => void;
-  resetScenarios: () => void;
+  isInitialized: boolean;
+  initScenarios: () => Promise<void>;
+  addScenario: (scenario: Scenario) => Promise<void>;
+  deleteScenario: (scenarioId: string) => Promise<void>;
+  resetScenarios: () => Promise<void>;
 }
 
-export const useScenarioStore = create<ScenarioStore>()(
-  persist(
-    (set) => ({
-      scenarios: defaultScenarios,
-      addScenario: (newScenario) =>
-        set((state) => ({
-          scenarios: [newScenario, ...state.scenarios],
-        })),
-      deleteScenario: (scenarioId) =>
-        set((state) => ({
-          scenarios: state.scenarios.filter((s) => s.id !== scenarioId),
-        })),
-      resetScenarios: () =>
-        set({
-          scenarios: defaultScenarios,
-        }),
-    }),
-    {
-      name: 'suraksha-scenarios-storage',
+export const useScenarioStore = create<ScenarioStore>()((set, get) => ({
+  scenarios: defaultScenarios,
+  isInitialized: false,
+  initScenarios: async () => {
+    if (get().isInitialized) return;
+    const fromDb = await fetchScenariosFromDb();
+    if (fromDb.length > 0) {
+      set({ scenarios: fromDb, isInitialized: true });
+    } else {
+      for (const s of defaultScenarios) await upsertScenarioToDb(s);
+      set({ scenarios: defaultScenarios, isInitialized: true });
     }
-  )
-);
+  },
+  addScenario: async (newScenario) => {
+    await upsertScenarioToDb(newScenario);
+    set((state) => ({ scenarios: [newScenario, ...state.scenarios] }));
+  },
+  deleteScenario: async (scenarioId) => {
+    await deleteScenarioFromDb(scenarioId);
+    set((state) => ({ scenarios: state.scenarios.filter((s) => s.id !== scenarioId) }));
+  },
+  resetScenarios: async () => {
+    for (const s of get().scenarios) await deleteScenarioFromDb(s.id);
+    for (const s of defaultScenarios) await upsertScenarioToDb(s);
+    set({ scenarios: defaultScenarios });
+  },
+}));
 
 // ── Student Progress & Live Real-Time Aggregator Store (Pure Supabase — No localStorage Fallback) ──
 

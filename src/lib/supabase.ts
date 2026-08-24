@@ -7,6 +7,8 @@ import {
   QuizAttemptRecord,
   DisasterType,
   Badge,
+  Scenario,
+  DistrictSchoolSummary,
 } from './types';
 import { allBadges } from './data/scores';
 
@@ -415,5 +417,109 @@ export async function updateDrillParticipantInDb(
     if (error) console.warn('Error updating drill participant in Supabase:', error);
   } catch (err) {
     console.warn('Error in updateDrillParticipantInDb:', err);
+  }
+}
+
+// ── Admin: Scenarios ──
+export async function fetchScenariosFromDb(): Promise<Scenario[]> {
+  if (!supabase) return [];
+  try {
+    const { data, error } = await supabase.from('scenarios').select('*');
+    if (error) return [];
+    return data.map((r: any) => ({
+      id: r.id,
+      title: r.title,
+      disasterType: r.disaster_type,
+      difficulty: r.difficulty,
+      estimatedMinutes: r.estimated_minutes,
+      description: r.description,
+      location: r.location,
+      engineType: r.engine_type,
+      url: r.url,
+      steps: r.steps || [],
+    }));
+  } catch {
+    return [];
+  }
+}
+
+export async function upsertScenarioToDb(scenario: Scenario): Promise<void> {
+  if (!supabase) return;
+  try {
+    await supabase.from('scenarios').upsert({
+      id: scenario.id,
+      title: scenario.title,
+      disaster_type: scenario.disasterType,
+      difficulty: scenario.difficulty,
+      estimated_minutes: scenario.estimatedMinutes,
+      description: scenario.description,
+      location: scenario.location,
+      engine_type: scenario.engineType,
+      url: scenario.url,
+      steps: scenario.steps,
+    }, { onConflict: 'id' });
+  } catch (err) {
+    console.warn(err);
+  }
+}
+
+export async function deleteScenarioFromDb(scenarioId: string): Promise<void> {
+  if (!supabase) return;
+  try {
+    await supabase.from('scenarios').delete().eq('id', scenarioId);
+  } catch (err) {
+    console.warn(err);
+  }
+}
+
+// ── Admin: District Schools ──
+export async function fetchDistrictSchoolsFromDb(): Promise<DistrictSchoolSummary[]> {
+  if (!supabase) return [];
+  try {
+    const { data, error } = await supabase.from('district_schools').select('*');
+    if (error) return [];
+    return data.map((r: any) => ({
+      schoolId: r.school_id,
+      schoolName: r.school_name,
+      district: r.district,
+      preparednessScore: r.preparedness_score,
+      studentsTotal: r.students_total,
+      studentsTrained: r.students_trained,
+      teachersTrained: r.teachers_trained,
+      drillsCompleted: r.drills_completed,
+      lastDrillDate: r.last_drill_date,
+      riskLevel: r.risk_level,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+export async function upsertDistrictSchoolToDb(school: DistrictSchoolSummary): Promise<void> {
+  if (!supabase) return;
+  try {
+    await supabase.from('district_schools').upsert({
+      school_id: school.schoolId,
+      school_name: school.schoolName,
+      district: school.district,
+      preparedness_score: school.preparednessScore,
+      students_total: school.studentsTotal,
+      students_trained: school.studentsTrained,
+      teachers_trained: school.teachersTrained,
+      drills_completed: school.drillsCompleted,
+      last_drill_date: school.lastDrillDate,
+      risk_level: school.riskLevel,
+    }, { onConflict: 'school_id' });
+  } catch (err) {
+    console.warn(err);
+  }
+}
+
+export async function deleteDistrictSchoolFromDb(schoolId: string): Promise<void> {
+  if (!supabase) return;
+  try {
+    await supabase.from('district_schools').delete().eq('school_id', schoolId);
+  } catch (err) {
+    console.warn(err);
   }
 }

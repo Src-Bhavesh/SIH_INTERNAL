@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import ScoreRing from '@/components/shared/ScoreRing';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -588,6 +588,15 @@ function DistrictContent() {
 }
 
 export default function DistrictPage() {
+  const { initSchools } = useDistrictStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    initSchools().then(() => setMounted(true));
+  }, [initSchools]);
+
+  if (!mounted) return null;
+
   return (
     <DashboardLayout requiredRole="district">
       <DistrictContent />

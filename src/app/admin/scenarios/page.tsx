@@ -509,7 +509,14 @@ function SimulationTestModal({
 }
 
 export default function AdminScenariosPage() {
-  const { scenarios, addScenario, deleteScenario, resetScenarios } = useScenarioStore();
+  const { scenarios, addScenario, deleteScenario, resetScenarios, initScenarios } = useScenarioStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    initScenarios().then(() => setMounted(true));
+  }, [initScenarios]);
+
+  if (!mounted) return null;
 
   // Search & Filter
   const [searchQuery, setSearchQuery] = useState('');
