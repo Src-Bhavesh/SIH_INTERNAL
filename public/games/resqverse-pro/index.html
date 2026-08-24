@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResQVerse PRO - Disaster Preparedness Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+<div id="app">
+  <!-- Starfield Canvas Background -->
+  <canvas id="starfield"></canvas>
+  <div class="city-skyline" id="citySkyline"></div>
+
+  <!-- START SCREEN -->
+  <section id="startScreen" class="screen active">
+    <div class="start-content">
+      <div class="logo-wrap">
+        <h1 class="logo">ResQVerse</h1>
+        <div class="logo-glow"></div>
+        <p class="tagline"><span>DISASTER PREPAREDNESS</span> <span class="dot">•</span> <span>SURVIVE & LEARN</span> <span class="dot">•</span> <span>PRO EDITION</span></p>
+      </div>
+
+      <div class="controls-card">
+        <div class="control"><kbd>WASD</kbd><span>Move</span></div>
+        <div class="control"><kbd>SPACE</kbd><span>Jump</span></div>
+        <div class="control"><kbd>SHIFT</kbd><span>Sprint</span></div>
+        <div class="control"><kbd>E</kbd><span>Interact</span></div>
+        <div class="control"><kbd>S</kbd><span>Crouch / Crawl</span></div>
+      </div>
+
+      <button id="playNowBtn" class="play-btn">
+        <span class="play-icon">▶</span>
+        <span>PLAY NOW</span>
+        <div class="btn-shine"></div>
+      </button>
+
+      <div class="features">
+        <div class="feat">🎓 Learn Real Survival Skills</div>
+        <div class="feat">🏆 3 Epic Disaster Worlds</div>
+        <div class="feat">🧠 Interactive Quizzes</div>
+      </div>
+    </div>
+    <div class="version">v2.0 PRO • Built for Young Heroes • ResQVerse Academy</div>
+  </section>
+
+  <!-- HALL SCREEN - REDESIGNED -->
+  <section id="hallScreen" class="screen">
+    <div class="hall-header">
+      <div class="hall-title">Disaster Preparedness Selection Hall</div>
+      <div class="hall-subtitle">Choose your training simulation • All 3 disasters visible • Master survival skills</div>
+    </div>
+    <div class="hall-stage">
+      <canvas id="hallCanvas"></canvas>
+      <div class="hall-overlay" id="hallOverlay"></div>
+    </div>
+    <button class="back-btn" id="backToStart">← Back to Menu</button>
+  </section>
+
+  <!-- DRILL INTRO -->
+  <section id="drillIntro" class="screen">
+    <div class="drill-card" id="drillCard">
+      <!-- Filled by JS -->
+    </div>
+  </section>
+
+  <!-- GAMEPLAY SCREEN -->
+  <section id="gameScreen" class="screen">
+    <div class="game-hud">
+      <div class="hud-left">
+        <div class="hud-item stars"><span class="icon">⭐</span><span id="starCount">0</span></div>
+        <div class="hud-item health"><span class="icon">❤️</span><div class="health-bar"><div id="healthFill"></div></div></div>
+        <div class="hud-item badges"><span class="icon">🎖️</span><span id="badgeCount">0 / 3</span></div>
+      </div>
+      <div class="hud-center">
+        <div class="timer-wrap"><span class="timer-icon">⏱️</span><span id="gameTimer">2:00</span></div>
+        <div class="phase-indicator" id="phaseIndicator">Phase 1: Explore</div>
+      </div>
+      <div class="hud-right">
+        <div class="location" id="locationName">City Theatre</div>
+        <button id="pauseBtn" class="mini-btn">⏸️</button>
+        <button id="exitGameBtn" class="mini-btn exit">✕</button>
+      </div>
+    </div>
+    <div class="game-canvas-wrap">
+      <canvas id="gameCanvas"></canvas>
+      <div id="gameMessage" class="game-message hidden"></div>
+      <div id="educationalPopup" class="edu-popup hidden"></div>
+      <div id="damageVignette" class="damage-vignette"></div>
+    </div>
+    <div class="game-footer" id="gameFooter">Explore the room - disaster incoming! Find safe spots marked in green.</div>
+  </section>
+
+  <!-- RESULT SCREEN -->
+  <section id="resultScreen" class="screen">
+    <div class="result-card" id="resultCard"></div>
+  </section>
+
+  <!-- QUIZ MODAL -->
+  <div id="quizModal" class="modal hidden">
+    <div class="modal-content quiz-content">
+      <h2>🧠 Safety Check!</h2>
+      <p id="quizQuestion">Question here?</p>
+      <div id="quizOptions" class="quiz-options"></div>
+      <div id="quizFeedback" class="quiz-feedback"></div>
+    </div>
+  </div>
+
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
