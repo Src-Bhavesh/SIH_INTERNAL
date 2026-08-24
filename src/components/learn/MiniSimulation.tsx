@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Timer, AlertTriangle, ShieldCheck, Play, CheckCircle2, RefreshCcw } from 'lucide-react';
+import { Timer, AlertTriangle, ShieldCheck, Play, CheckCircle2, RefreshCcw, ChevronRight } from 'lucide-react';
 
 interface MiniSimulationProps {
   onComplete: (score: number) => void;

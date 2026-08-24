@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { disasterModules } from '@/lib/data';
 import { useAuthStore, useStudentProgressStore } from '@/lib/store';
+import { DisasterModule, QuizAttemptRecord } from '@/lib/types';
 import {
   Lock, CheckCircle2, ArrowRight, BookOpen, Award,
   Sparkles, Check, ChevronRight, Video, FileText, CheckSquare,
@@ -73,12 +74,12 @@ function ModuleDetail({
     setXp(prev => prev + score);
     
     // Save to backend logic (simplified for UI)
-    const quizSection = module.sections.find(s => s.type === 'quiz');
+    const quizSection = module.sections.find((s: any) => s.type === 'quiz');
     let correctCount = 0;
     
     if (quizSection?.content.questions) {
-      quizSection.content.questions.forEach(q => {
-        const selectedOption = q.options.find(o => o.id === quizAnswers[q.id]);
+      quizSection.content.questions.forEach((q: any) => {
+        const selectedOption = q.options.find((o: any) => o.id === quizAnswers[q.id]);
         if (selectedOption?.isCorrect) correctCount++;
       });
     }
@@ -175,23 +176,23 @@ function ModuleDetail({
             transition={{ duration: 0.3 }}
           >
             {activeSection.type === 'overview' && (
-              <InteractiveOverview content={activeSection.content} onComplete={handleSectionComplete} />
+              <InteractiveOverview content={(activeSection as any).content} onComplete={handleSectionComplete} />
             )}
             
             {activeSection.type === 'dos_donts' && (
-              <InteractiveDosDonts content={activeSection.content} onComplete={handleSectionComplete} />
+              <InteractiveDosDonts content={(activeSection as any).content} onComplete={handleSectionComplete} />
             )}
             
             {activeSection.type === 'steps' && (
-              <InteractiveSteps content={activeSection.content} onComplete={handleSectionComplete} />
+              <InteractiveSteps content={(activeSection as any).content} onComplete={handleSectionComplete} />
             )}
             
             {activeSection.type === 'checklist' && (
-              <InteractiveChecklist content={activeSection.content} onComplete={handleSectionComplete} />
+              <InteractiveChecklist content={(activeSection as any).content} onComplete={handleSectionComplete} />
             )}
             
             {activeSection.type === 'quiz' && (
-              <InteractiveQuiz content={activeSection.content} onComplete={handleQuizComplete} />
+              <InteractiveQuiz content={(activeSection as any).content} onComplete={handleQuizComplete} />
             )}
             
             {activeSection.type === 'simulation' && (
