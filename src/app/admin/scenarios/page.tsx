@@ -516,7 +516,6 @@ export default function AdminScenariosPage() {
     initScenarios().then(() => setMounted(true));
   }, [initScenarios]);
 
-  if (!mounted) return null;
 
   // Search & Filter
   const [searchQuery, setSearchQuery] = useState('');
@@ -699,6 +698,8 @@ export default function AdminScenariosPage() {
     intermediate: 'bg-amber-50 text-amber-700 border-amber-200',
     advanced: 'bg-rose-50 text-rose-700 border-rose-200',
   };
+
+  if (!mounted) return null;
 
   return (
     <DashboardLayout requiredRole="admin">
