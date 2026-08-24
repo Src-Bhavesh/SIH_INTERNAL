@@ -236,7 +236,7 @@ function SimulationEngine({ scenarioId }: { scenarioId: string }) {
           </Link>
         </div>
         <iframe 
-          src={scenario.url} 
+          src={`${scenario.url}?v=${Date.now()}`} 
           className="w-full flex-1 border-none bg-background" 
           title={scenario.title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
